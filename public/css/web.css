@@ -4660,6 +4660,11 @@ fieldset[disabled] .form-material .form-control~.floating-label {
 .page-login-min .page-brand-info .brand-img {
 	vertical-align: middle
 }
+.page-login-min .page-brand-info .brand-imgmid {
+	vertical-align: middle;
+	margin-top: -80px;
+	padding-left: 90px;
+}
 .page-login-min .page-brand-info .brand-text {
 	display: inline-block;
 	margin: 0px 0 5px -145px;
@@ -4688,6 +4693,11 @@ fieldset[disabled] .form-material .form-control~.floating-label {
 }
 .page-login-min .page-login-main .brand-img {
 	vertical-align: middle
+}
+.page-login-min .page-login-main .brand-imgmid {
+	vertical-align: middle;
+	margin-top: -80px;
+	padding-left: 90px;
 }
 .page-login-min .page-login-main .brand-text {
 	display: inline-block;
