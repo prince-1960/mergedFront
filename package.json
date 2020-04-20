@@ -6,7 +6,7 @@
   "main": "Server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
-    "start": "react-scripts start",
+    "start": "PORT=8080 react-scripts start",
     "server": "nodemon server.js",
     "client": "npm start",
     "dev": "concurrently \"npm run client\" \"npm run server\""
