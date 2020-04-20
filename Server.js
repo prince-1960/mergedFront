@@ -515,6 +515,8 @@ router.route("/Detail/TechLeadE2").get(function(req, res) {
 
 
 app.use('/', router);
+const PORT = process.env.PORT || 8080;
 
-app.listen(4000);
-console.log("Listening to PORT 4000");
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}...`);
+});
