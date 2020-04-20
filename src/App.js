@@ -1,151 +1,107 @@
 import React, { Component } from "react";
-import { login } from "./components/UserFunctions";
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import axios from "axios";
+//import {Pie} from 'react-chartjs-2';
+import PieChartCustom from "./PieChart";
 
-import Navbar from './components/Navbar'
-import Login from './components/Login'
-import Register from './components/Register'
-import E0 from './components/DevE0'
-import E1 from './components/DevE1'
-import E2 from './components/DevE2'
-import TechLeadE0 from './components/TechLeadE0'
-import TechLeadE1 from './components/TechLeadE1'
-import TechLeadE2 from './components/TechLeadE2'
-import LoginError from './components/LoginError'
-import RegisterError from './components/RegisterError'
-import Success from './components/RegisterSuccess'
-import Home from './components/Home'
-
-class App extends Component {
-	constructor() {
-		super();
-		this.state = {
-			username: "",
-			password: "",
-			errors: {}
-		};
-
-		this.onChange = this.onChange.bind(this);
-		this.onSubmit = this.onSubmit.bind(this);
-	}
-
-	onChange(e) {
-		this.setState({ [e.target.name]: e.target.value });
-	}
-	onSubmit(e) {
-		e.preventDefault();
-
-		const user = {
-			username: this.state.username,
-			password: this.state.password
-		};
-
-		login(user).then(res => {
-			if (res) {
-				this.props.history.push(`/home`);
-			} else {
-				this.props.history.push("/loginerror");
-			}
-		});
-	}
-	componentDidMount() {
-		document.getElementsByTagName("body")[0].className =
-			"page-login-min layout-full page-dark";
-	}
-
-    render() {
-    return (
-      <Router>
-          <Route exact path="/" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/loginerror" component={LoginError} />
-          <Route exact path="/registererror" component={RegisterError} />
-          <Route exact path="/success" component={Success} />
-          <Route exact path="/devE0" component={E0} />
-          <Route exact path="/devE1" component={E1} />
-          <Route exact path="/devE2" component={E2} />
-          <Route exact path="/techleadE0" component={TechLeadE0} />
-          <Route exact path="/techleadE1" component={TechLeadE1} />
-          <Route exact path="/techleadE2" component={TechLeadE2} />
-      </Router>
-    )
+class FetchData extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { responded: [], pieChartData: [] };
   }
-    
-	render() {
-		return (
-			<div class="page">
-				<div class="page-content">
-					<div class="page-brand-info">
-						<div class="brand">
-							<img class="brand-img" src="/images/logoblack.png" alt="..." />
-							<br />
-							<h2 class="brand-text font-size-30">Employee Competency Tracker</h2>
-						</div>
-					</div>
+  // added one more field for colors
+  colors = ["#E322627", "#C13C37", "#6A2135", "#E38627"];
 
-					<div class="page-login-main">
+  submitButtonAction() {
+    axios.get("http://localhost:3000/countries.json").then(
+      ((Response) => {
+        console.log(Response.data);
+        this.setState({ responded: Response.data });
+      },
+      (e) => {
+        console.log(e);
+      })
+    );
+  }
 
-            <img class="brand-imgmid" src="/images/main.png" alt="..." />
+  handleRoleChange(event) {
+    if (event.target.value !== "ps") {
+      // uncomment below line if you want to try the sameple data without db. chnage the port as per your server (uses countries.json inside public folder)
+      
+       //axios.get("http://localhost:3000/" + event.target.value +".json").then((Response) => {
+        axios.get('http://localhost:4000/Detail/' + event.target.value).then((Response) => {
+        let data = [];
+      /* old code
+     Response.data.status.map(status => {
+      Object.entries(status).map((s,index)=> {
+      removed status from above line and used forEach to avoid warning thrown by map fucntion as it expects an array to be returned
+    */
+        Response.data.forEach((status) => {
+          Object.entries(status).forEach((s, index) => {
+            // if condition applied to skip the id field being pushed to the pie chart
+            if (s[1].match(/\d+/g)) {
+              data.push({
+                title: s[0],
+                value: Number(s[1]),
+                color: this.colors[index],
+              });
+            }
+          });
+        });
+        //  this.setState({ responded: Response.data.status, pieChartData: data});
+        // removed status from this line as well
+        this.setState({ responded: Response.data, pieChartData: data });
+      })
+      ;
+    } else {
+      this.setState({ responded: [] });
+    }
+  }
 
+  render() {
+    const isDataAvailable = this.state.responded.length > 0;
+    const status = this.state.responded.map((data) => {
+      return (
+        <tr key={data.E0}>
+          <td>{data.E0}</td>
+          <td>{data.E1}</td>
+          <td>{data.E2}</td>
+        </tr>
+      );
+    });
+    const finalTable = isDataAvailable && (
+      <table styles={{ borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            <th>E0</th>
+            <th>E1</th>
+            <th>E2</th>
+          </tr>
+        </thead>
 
+        <tbody>{status}</tbody>
+      </table>
+    );
 
-						<div class="brand hidden-md-up">
-							<img class="brand-img" src="/images/logo.png" alt="..." />
-						</div>
-						<h3 class="font-size-24 bold">Login</h3>
-
-						<form onSubmit={this.onSubmit}>
-							<div
-								class="form-group form-material floating"
-								data-plugin="formMaterial"
-							>
-								<label htmlFor="username" for="inputUsername">
-									Username
-								</label>
-								<input
-									type="text"
-									class="form-control empty"
-									required
-									id="inputUsername"
-									name="username"
-									value={this.state.username}
-									onChange={this.onChange}
-								/>
-							</div>
-							<div
-								class="form-group form-material floating"
-								data-plugin="formMaterial"
-							>
-								<label htmlFor="password" for="inputPassword">
-									Password
-								</label>
-								<input
-									type="password"
-									minlength="4"
-									required
-									class="form-control empty"
-									id="inputPassword"
-									name="password"
-									value={this.state.password}
-									onChange={this.onChange}
-								/>
-							</div>
-							<button type="submit" class="btn btn-primary btn-block">
-								Login
-							</button>
-						</form>
-
-						<footer class="page-copyright">
-							<p>TCS Ninja</p>
-							<p>© 2020. All RIGHT RESERVED.</p>
-						</footer>
-					</div>
-				</div>
-			</div>
-		);
-	}
+    return (
+      <div>
+        <select
+          defaultValue="ps"
+          onChange={(event) => {
+            this.handleRoleChange(event);
+          }}
+        >
+          <option value="ps"> Please select</option>
+          <option value="dev"> developer</option>
+          <option value="techlead">Tech lead</option>
+        </select>
+        <br></br>
+        <br></br>
+        <br></br>
+        {finalTable}
+        <PieChartCustom data={this.state.pieChartData}></PieChartCustom>
+      </div>
+    );
+  }
 }
 
-export default Login;
+export default FetchData;
