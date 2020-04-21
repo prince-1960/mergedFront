@@ -1,107 +1,40 @@
-import React, { Component } from "react";
-import axios from "axios";
-//import {Pie} from 'react-chartjs-2';
-import PieChartCustom from "./PieChart";
+import React, { Component } from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-class FetchData extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { responded: [], pieChartData: [] };
-  }
-  // added one more field for colors
-  colors = ["#E322627", "#C13C37", "#6A2135", "#E38627"];
+import Navbar from './components/Navbar'
+import Login from './components/Login'
+import Register from './components/Register'
+import E0 from './components/DevE0'
+import E1 from './components/DevE1'
+import E2 from './components/DevE2'
+import TechLeadE0 from './components/TechLeadE0'
+import TechLeadE1 from './components/TechLeadE1'
+import TechLeadE2 from './components/TechLeadE2'
+import LoginError from './components/LoginError'
+import RegisterError from './components/RegisterError'
+import Success from './components/RegisterSuccess'
+import Home from './components/Home'
 
-  submitButtonAction() {
-    axios.get("http://localhost:3000/countries.json").then(
-      ((Response) => {
-        console.log(Response.data);
-        this.setState({ responded: Response.data });
-      },
-      (e) => {
-        console.log(e);
-      })
-    );
-  }
-
-  handleRoleChange(event) {
-    if (event.target.value !== "ps") {
-      // uncomment below line if you want to try the sameple data without db. chnage the port as per your server (uses countries.json inside public folder)
-      
-       //axios.get("http://localhost:3000/" + event.target.value +".json").then((Response) => {
-        axios.get('http://localhost:4000/Detail/' + event.target.value).then((Response) => {
-        let data = [];
-      /* old code
-     Response.data.status.map(status => {
-      Object.entries(status).map((s,index)=> {
-      removed status from above line and used forEach to avoid warning thrown by map fucntion as it expects an array to be returned
-    */
-        Response.data.forEach((status) => {
-          Object.entries(status).forEach((s, index) => {
-            // if condition applied to skip the id field being pushed to the pie chart
-            if (s[1].match(/\d+/g)) {
-              data.push({
-                title: s[0],
-                value: Number(s[1]),
-                color: this.colors[index],
-              });
-            }
-          });
-        });
-        //  this.setState({ responded: Response.data.status, pieChartData: data});
-        // removed status from this line as well
-        this.setState({ responded: Response.data, pieChartData: data });
-      })
-      ;
-    } else {
-      this.setState({ responded: [] });
-    }
-  }
-
-  render() {
-    const isDataAvailable = this.state.responded.length > 0;
-    const status = this.state.responded.map((data) => {
-      return (
-        <tr key={data.E0}>
-          <td>{data.E0}</td>
-          <td>{data.E1}</td>
-          <td>{data.E2}</td>
-        </tr>
-      );
-    });
-    const finalTable = isDataAvailable && (
-      <table styles={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr>
-            <th>E0</th>
-            <th>E1</th>
-            <th>E2</th>
-          </tr>
-        </thead>
-
-        <tbody>{status}</tbody>
-      </table>
-    );
-
+class App extends Component {
+render() {
     return (
-      <div>
-        <select
-          defaultValue="ps"
-          onChange={(event) => {
-            this.handleRoleChange(event);
-          }}
-        >
-          <option value="ps"> Please select</option>
-          <option value="dev"> developer</option>
-          <option value="techlead">Tech lead</option>
-        </select>
-        <br></br>
-        <br></br>
-        <br></br>
-        {finalTable}
-        <PieChartCustom data={this.state.pieChartData}></PieChartCustom>
-      </div>
-    );
+      <Router>
+          <Route exact path="/" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/loginerror" component={LoginError} />
+          <Route exact path="/registererror" component={RegisterError} />
+          <Route exact path="/success" component={Success} />
+          <Route exact path="/devE0" component={E0} />
+          <Route exact path="/devE1" component={E1} />
+          <Route exact path="/devE2" component={E2} />
+          <Route exact path="/techleadE0" component={TechLeadE0} />
+          <Route exact path="/techleadE1" component={TechLeadE1} />
+          <Route exact path="/techleadE2" component={TechLeadE2} />
+      </Router>
+    )
   }
 }
 
-export default FetchData;
+export default App
