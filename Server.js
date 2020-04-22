@@ -517,6 +517,7 @@ router.route("/Detail/TechLeadE2").get(function(req, res) {
 app.use('/', router);
 
 
+const port = process.env.PORT || 8080;
+app.listen(port);
 
-app.listen(5000);
-console.log("Listening to PORT 5000");
+console.log('App is listening on port ' + port);
