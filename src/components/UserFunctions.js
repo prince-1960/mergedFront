@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const register = newUser => {
 	return axios
-		.post("http://localhost:4000/api/register", {
+		.post("https://mongodb-274816.wl.r.appspot.com:5000/api/register", {
 			username: newUser.username,
 			email: newUser.email,
 			password: newUser.password
@@ -18,7 +18,7 @@ export const register = newUser => {
 
 export const login = user => {
 	return axios
-		.post("http://localhost:4000/api/validate", {
+		.post("https://mongodb-274816.wl.r.appspot.com:5000/api/validate", {
 			username: user.username,
 			password: user.password
 		})
