@@ -8,7 +8,7 @@
   "scripts": {
      "start": "npm run build-client && node server",
     "start-local": "npm run build-client && PORT=8080 node server",
-    "build-client": "cd client && npm run build && cd ..",
+    "build-client": "npm run build",
     "client-install": "npm install --prefix client",
     "build": "react-scripts build",
     "server": "nodemon server.js",
