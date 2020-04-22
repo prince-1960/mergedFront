@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Integrated code",
+   "homepage": ".",
   "main": "Server.js",
   "scripts": {
     "client-install": "npm install --prefix client",
