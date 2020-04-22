@@ -6,8 +6,10 @@
    "homepage": ".",
   "main": "Server.js",
   "scripts": {
+     "start": "npm run build-client && node server",
+    "start-local": "npm run build-client && PORT=8080 node server",
+    "build-client": "cd client && npm run build && cd ..",
     "client-install": "npm install --prefix client",
-    "start": "PORT=8080 react-scripts start",
     "build": "react-scripts build",
     "server": "nodemon server.js",
     "client": "npm start",
